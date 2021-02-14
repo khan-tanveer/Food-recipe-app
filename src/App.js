@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 import "./App.css";
+import Recipe from "./components/Recipe";
+import Alert from "./components/Alert";
 
 function App() {
-  const [query, setQuery] = useState("");
-
   const [recipes, setRecipes] = useState([]);
+  const [query, setQuery] = useState("");
+  const [alert, setAlert] = useState("");
 
   const APP_ID = "3fcb3670";
 
@@ -14,11 +17,18 @@ function App() {
   const Url = `https://api.edamam.com/search?q=${query}&app_id=${APP_ID}&app_key=${APP_KEY}`;
 
   const getData = async () => {
-    const result = await axios.get(Url);
-    setRecipes(result.data.hits);
-
-    console.log(result);
-    setQuery("");
+    if (query !== "") {
+      const result = await axios.get(Url);
+      if (!result.data.more) {
+        return setAlert("No Food With Such Name");
+      }
+      setRecipes(result.data.hits);
+      console.log(result);
+      setAlert("");
+      setQuery("");
+    } else {
+      setAlert("please fill the form ");
+    }
   };
 
   const onChange = (e) => {
@@ -34,6 +44,7 @@ function App() {
     <div className="App">
       <h1 onClick={getData}>food searching app</h1>
       <form className="search-form" onSubmit={onSubmit}>
+        {alert !== "" && <Alert alert={alert} />}
         <input
           type="text"
           placeholder="Search Food"
@@ -45,7 +56,7 @@ function App() {
       </form>
       <div className="recipes">
         {recipes !== [] &&
-          recipes.map((recipe) => <h2>{recipe.recipe.label}</h2>)}
+          recipes.map((recipe) => <Recipe key={uuidv4()} recipe={recipe} />)}
       </div>
     </div>
   );
