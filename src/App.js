@@ -45,6 +45,7 @@ function App() {
       <h1 onClick={getData}>food searching app</h1>
       <form className="search-form" onSubmit={onSubmit}>
         {alert !== "" && <Alert alert={alert} />}
+        <br />
         <input
           type="text"
           placeholder="Search Food"
