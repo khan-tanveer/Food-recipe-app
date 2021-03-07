@@ -20,14 +20,14 @@ function App() {
     if (query !== "") {
       const result = await axios.get(Url);
       if (!result.data.more) {
-        return setAlert("No Food With Such Name");
+        return setAlert("No Food With  a Such Name");
       }
       setRecipes(result.data.hits);
       console.log(result);
       setAlert("");
       setQuery("");
     } else {
-      setAlert("please fill the form ");
+      setAlert("please fill the form first ");
     }
   };
 
